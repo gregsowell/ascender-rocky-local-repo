@@ -1,0 +1,26 @@
+---
+- name: Configure Rocky hosts to act as local repositories
+  hosts: rocky-repos
+  gather_facts: false
+  vars:
+    web_path: /var/www/local-repo
+
+  tasks:
+
+  # install webserver
+  - name: install nginx and rsync
+    ansible.builtin.dnf:
+      name: 
+        - nginx
+        - rsync
+      state: latest
+
+  - name: Create the var/www directory
+    ansible.builtin.file:
+      path: "{{ web_path }}"
+      state: directory
+      mode: '0755'
+      
+  # configure webserver /etc/nginx/nginx.conf
+  # place shell script in /opt/scripts/repo-sync.sh - make sure it's executable
+  # create a cronjob to run it every 4 hours
