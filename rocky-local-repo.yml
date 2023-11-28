@@ -2,25 +2,84 @@
 - name: Configure Rocky hosts to act as local repositories
   hosts: rocky-repos
   gather_facts: false
+  become: true
   vars:
+    # path to webserver directory to hold all files
     web_path: /var/www/local-repo
+    # path to where scripts and script data should be stored
+    script_path: /opt/scripts
+    # how frequent in hours to sync repo
+    sync_hours_freq: 4
+    # would you like to install and configure an nginx webserver 
+    configure_webserver: true
 
   tasks:
-
+  - name: block to configure webserver
+    when: configure_webserver
+    block:
   # install webserver
-  - name: install nginx and rsync
+    - name: install nginx
+      ansible.builtin.dnf:
+        name: nginx
+        state: latest
+
+    - name: Create the web_path directory
+      ansible.builtin.file:
+        path: "{{ web_path }}"
+        state: directory
+        mode: '0755'
+
+  # configure webserver /etc/nginx/nginx.conf
+    - name: Create nginx config file
+      ansible.builtin.template:
+        src: /nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+
+    # start webserver and enable it to run on boot
+    - name: Start service nginx and enable it on boot
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: open firewall for http/https 
+      ansible.posix.firewalld:
+        service: "{{ item }}"
+        permanent: true
+        state: enabled
+      loop:
+        - http
+        - https
+
+  - name: install rsync
     ansible.builtin.dnf:
-      name: 
-        - nginx
-        - rsync
+      name: rsync
       state: latest
 
-  - name: Create the var/www directory
+  - name: Create the script_path
     ansible.builtin.file:
-      path: "{{ web_path }}"
+      path: "{{ script_path }}"
       state: directory
       mode: '0755'
-      
-  # configure webserver /etc/nginx/nginx.conf
-  # place shell script in /opt/scripts/repo-sync.sh - make sure it's executable
-  # create a cronjob to run it every 4 hours
+
+# place shell script in /opt/scripts/repo-sync.sh - make sure it's executable
+  - name: Place shell script in /opt/scripts/repo-sync.sh - make sure it's executable
+    ansible.builtin.template:
+      src: /repo-sync.sh.j2
+      dest: "{{ script_path }}/repo-sync.sh"
+      mode: '0755'
+
+  - name: Place repo excludes
+    ansible.builtin.template:
+      src: /excludes.txt.j2
+      dest: "{{ script_path }}/excludes.txt"
+      mode: '0551'
+
+
+  # create a cronjob to run script every 4 hours
+  - name: create cronjob to run repo sync script every x hours
+    ansible.builtin.cron:
+      name: "repo sync"
+      minute: "0"
+      hour: "*/4"
+      job: "{{ script_path }}/repo-sync.sh > /dev/null"
