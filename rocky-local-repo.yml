@@ -60,12 +60,17 @@
         - http
         - https
 
-    - name: Set selinux context
+    # semanage fcontext -a -e /home/Ben '/websites(/.*)?'
+    - name: Copy selinux context
       when: selinux_config
-      community.general.sefcontext:
-        target: "{{ web_path }}"
-        substitute: /var/www
-        state: present
+      ansible.builtin.command: "semanage fcontext -a -e /home/Ben {{ web_path }}(/.*)?"
+      
+    # - name: Set selinux context
+    #   when: selinux_config
+    #   community.general.sefcontext:
+    #     target: "{{ web_path }}"
+    #     substitute: /var/www
+    #     state: present
 
     - name: Apply new SELinux context
       when: selinux_config
