@@ -17,7 +17,7 @@
     configure_webserver: true
 
     # configure selinux for webserver folder storing repo files
-    selinux_config: false
+    selinux_config: true
 
     # sync the repo immediately instead of waiting for standard time interval
     sync_now: true
