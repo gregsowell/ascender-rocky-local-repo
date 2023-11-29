@@ -60,6 +60,13 @@
         - http
         - https
 
+    #policycoreutils-python-utils
+    - name: install selinux tools
+      when: selinux_config
+      ansible.builtin.dnf:
+        name: policycoreutils-python-utils
+        state: latest
+
     # semanage fcontext -a -e /home/Ben '/websites(/.*)?'
     - name: Copy selinux context
       when: selinux_config
