@@ -92,4 +92,7 @@
 
   - name: run sync right now rather than waiting for cronjob
     when: sync_now
-    ansible.builtin.shell: "{{ script_path }}/repo-sync.sh > /dev/null &"
+    # ansible.builtin.shell: "{{ script_path }}/repo-sync.sh > /dev/null &"
+    ansible.builtin.shell: "{{ script_path }}/repo-sync.sh > /dev/null"
+    async: 7200
+    poll: 0
