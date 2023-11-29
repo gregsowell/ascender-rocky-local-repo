@@ -16,8 +16,8 @@
     # would you like to install and configure an nginx webserver 
     configure_webserver: true
 
-    # configure selinux for webserver
-    selinux_config: true
+    # configure selinux for webserver folder storing repo files
+    selinux_config: false
 
     # sync the repo immediately instead of waiting for standard time interval
     sync_now: true
