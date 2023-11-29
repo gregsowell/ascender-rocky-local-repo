@@ -32,7 +32,7 @@
   # configure webserver /etc/nginx/nginx.conf
     - name: Create nginx config file
       ansible.builtin.template:
-        src: /nginx.conf.j2
+        src: nginx.conf.j2
         dest: /etc/nginx/nginx.conf
 
     # start webserver and enable it to run on boot
@@ -65,13 +65,13 @@
 # place shell script in /opt/scripts/repo-sync.sh - make sure it's executable
   - name: Place shell script in /opt/scripts/repo-sync.sh - make sure it's executable
     ansible.builtin.template:
-      src: /repo-sync.sh.j2
+      src: repo-sync.sh.j2
       dest: "{{ script_path }}/repo-sync.sh"
       mode: '0755'
 
   - name: Place repo excludes
     ansible.builtin.template:
-      src: /excludes.txt.j2
+      src: excludes.txt.j2
       dest: "{{ script_path }}/excludes.txt"
       mode: '0551'
 
