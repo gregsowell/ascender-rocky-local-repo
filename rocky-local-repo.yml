@@ -6,12 +6,18 @@
   vars:
     # path to webserver directory to hold all files
     web_path: /var/www/local-repo
+    
     # path to where scripts and script data should be stored
     script_path: /opt/scripts
+    
     # how frequent in hours to sync repo
     sync_hours_freq: 4
+    
     # would you like to install and configure an nginx webserver 
     configure_webserver: true
+
+    # sync the repo immediately instead of waiting for standard time interval
+    sync_now: true
 
   tasks:
   - name: block to configure webserver
@@ -83,3 +89,7 @@
       minute: "0"
       hour: "*/4"
       job: "{{ script_path }}/repo-sync.sh > /dev/null"
+
+  - name: run sync right now rather than waiting for cronjob
+    when: sync_now
+    ansible.builtin.shell: "{{ script_path }}/repo-sync.sh &"
