@@ -57,6 +57,15 @@
         - http
         - https
 
+    - name: Set selinux context
+      community.general.sefcontext:
+        target: "{{ web_path }}"
+        substitute: /var/www
+        state: present
+
+    - name: Apply new SELinux context
+      ansible.builtin.command: "restorecon -irv {{ web_path }}"
+
   - name: install rsync
     ansible.builtin.dnf:
       name: rsync
