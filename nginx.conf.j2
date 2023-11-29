@@ -37,6 +37,7 @@ http {
 
         # Serve static files
         location / {
+            autoindex on;
             try_files $uri $uri/ =404;
         }
 
