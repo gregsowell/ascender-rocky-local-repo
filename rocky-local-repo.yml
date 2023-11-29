@@ -67,17 +67,16 @@
         name: policycoreutils-python-utils
         state: latest
 
-    # semanage fcontext -a -e /home/Ben '/websites(/.*)?'
-    - name: Copy selinux context
-      when: selinux_config
-      ansible.builtin.command: "semanage fcontext -a -e /var/www {{ web_path }}(/.*)?"
-
-    # - name: Set selinux context
+    # - name: Copy selinux context
     #   when: selinux_config
-    #   community.general.sefcontext:
-    #     target: "{{ web_path }}"
-    #     substitute: /var/www
-    #     state: present
+    #   ansible.builtin.command: "semanage fcontext -a -e /var/www {{ web_path }}(/.*)?"
+
+    - name: Set selinux context
+      when: selinux_config
+      community.general.sefcontext:
+        target: "{{ web_path }}"
+        substitute: /var/www
+        state: present
 
     - name: Apply new SELinux context
       when: selinux_config
@@ -108,8 +107,6 @@
       dest: "{{ script_path }}/excludes.txt"
       mode: '0551'
 
-
-  # create a cronjob to run script every 4 hours
   - name: create cronjob to run repo sync script every x hours
     ansible.builtin.cron:
       name: "repo sync"
@@ -119,7 +116,6 @@
 
   - name: run sync right now rather than waiting for cronjob
     when: sync_now
-    # ansible.builtin.shell: "{{ script_path }}/repo-sync.sh > /dev/null &"
     ansible.builtin.shell: "{{ script_path }}/repo-sync.sh > /dev/null"
     async: 7200
     poll: 0
