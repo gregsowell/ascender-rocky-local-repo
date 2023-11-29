@@ -77,6 +77,7 @@
         target: "{{ web_path }}"
         substitute: /var/www
         state: present
+      ignore_errors: true
 
     - name: Apply new SELinux context
       when: selinux_config
