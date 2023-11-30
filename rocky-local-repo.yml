@@ -25,24 +25,24 @@
     # exclude objects from repository sync
     # this list was kindly supplied by Jimmy Conner
     repo_exclude: 
-      - !unsafe */Devel*
-      - !unsafe */Live*
-      - !unsafe */aarch64*
-      - !unsafe */ppc64le/*
-      - !unsafe */s390x/*
-      - !unsafe */kickstart/*
-      - !unsafe */source/*
-      - !unsafe */debug/*
-      - !unsafe */images/*
-      - !unsafe */isos/*
-      - !unsafe */live/*
-      - !unsafe */Devel*
-      - !unsafe 8/*
-      - !unsafe 8.4/*
-      - !unsafe 8.5/*
-      - !unsafe 8.6/*
-      - !unsafe 9/*
-      - !unsafe 9.0/*
+      - '*/Devel*'
+      - '*/Live*'
+      - '*/aarch64*'
+      - '*/ppc64le/*'
+      - '*/s390x/*'
+      - '*/kickstart/*'
+      - '*/source/*'
+      - '*/debug/*'
+      - '*/images/*'
+      - '*/isos/*'
+      - '*/live/*'
+      - '*/Devel*'
+      - '8/*'
+      - '8.4/*'
+      - '8.5/*'
+      - '8.6/*'
+      - '9/*'
+      - '9.0/*'
 
   tasks:
   - name: block to configure webserver
