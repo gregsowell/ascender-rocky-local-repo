@@ -20,7 +20,7 @@
     selinux_config: true
 
     # sync the repo immediately instead of waiting for standard time interval
-    sync_now: true
+    sync_now: false
 
   tasks:
   - name: block to configure webserver
