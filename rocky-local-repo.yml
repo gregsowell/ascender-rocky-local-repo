@@ -123,16 +123,10 @@
       dest: "{{ script_path }}/repo-sync.sh"
       mode: '0755'
 
-  # # the excludes in here were kindly provided by Jimmy Conner, so thank or blame him
-  # - name: Place repo excludes
-  #   ansible.builtin.template:
-  #     src: excludes.txt.j2
-  #     dest: "{{ script_path }}/excludes.txt"
-  #     mode: '0331'
-
-  - name: create the excludes file from the repo_exclude variable
-    ansible.builtin.copy:
-      content: "{{ repo_exclude }}"
+  # the excludes in here were kindly provided by Jimmy Conner, so thank or blame him
+  - name: Place repo excludes
+    ansible.builtin.template:
+      src: excludes.txt.j2
       dest: "{{ script_path }}/excludes.txt"
       mode: '0331'
 
