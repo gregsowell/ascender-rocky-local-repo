@@ -22,6 +22,28 @@
     # sync the repo immediately instead of waiting for standard time interval
     sync_now: false
 
+    # exclude objects from repository sync
+    # this list was kindly supplied by Jimmy Conner
+    repo_exclude: 
+      - */Devel*
+      - */Live*
+      - */aarch64*
+      - */ppc64le/*
+      - */s390x/*
+      - */kickstart/*
+      - */source/*
+      - */debug/*
+      - */images/*
+      - */isos/*
+      - */live/*
+      - */Devel*
+      - 8/*
+      - 8.4/*
+      - 8.5/*
+      - 8.6/*
+      - 9/*
+      - 9.0/*
+
   tasks:
   - name: block to configure webserver
     when: configure_webserver
@@ -101,12 +123,18 @@
       dest: "{{ script_path }}/repo-sync.sh"
       mode: '0755'
 
-  # the excludes in here were kindly provided by Jimmy Conner, so thank or blame him
-  - name: Place repo excludes
-    ansible.builtin.template:
-      src: excludes.txt.j2
+  # # the excludes in here were kindly provided by Jimmy Conner, so thank or blame him
+  # - name: Place repo excludes
+  #   ansible.builtin.template:
+  #     src: excludes.txt.j2
+  #     dest: "{{ script_path }}/excludes.txt"
+  #     mode: '0331'
+
+  - name: create the excludes file from the repo_exclude variable
+    ansible.builtin.copy:
+      content: "{{ repo_exclude }}"
       dest: "{{ script_path }}/excludes.txt"
-      mode: '0551'
+      mode: '0331'
 
   - name: create cronjob to run repo sync script every x hours
     ansible.builtin.cron:
